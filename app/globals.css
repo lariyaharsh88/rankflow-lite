@@ -1,26 +1,80 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  color-scheme: light;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  @apply bg-slate-50 text-slate-900 antialiased;
+}
+
+/* Rendered article (outline previews, drafts, exports). */
+.article-prose {
+  @apply text-[15px] leading-7 text-slate-800;
+}
+.article-prose h1 {
+  @apply mb-4 mt-2 text-3xl font-bold leading-tight tracking-tight text-slate-900;
+}
+.article-prose h2 {
+  @apply mb-3 mt-9 text-xl font-semibold text-slate-900;
+}
+.article-prose h3 {
+  @apply mb-2 mt-6 text-base font-semibold text-slate-900;
+}
+.article-prose p {
+  @apply my-3;
+}
+.article-prose ul {
+  @apply my-3 list-disc pl-6;
+}
+.article-prose ol {
+  @apply my-3 list-decimal pl-6;
+}
+.article-prose li {
+  @apply my-1;
+}
+.article-prose a {
+  @apply text-indigo-700 underline decoration-indigo-300 underline-offset-2 hover:decoration-indigo-600;
+}
+.article-prose strong {
+  @apply font-semibold text-slate-900;
+}
+.article-prose blockquote {
+  @apply my-4 border-l-4 border-indigo-200 pl-4 text-slate-600;
+}
+.article-prose table {
+  @apply my-4 w-full border-collapse text-sm;
+}
+.article-prose th,
+.article-prose td {
+  @apply border border-slate-200 px-3 py-2 text-left align-top;
+}
+.article-prose th {
+  @apply bg-slate-100 font-semibold;
+}
+.article-prose code {
+  @apply rounded bg-slate-100 px-1 py-0.5 font-mono text-[13px];
+}
+.article-prose pre {
+  @apply my-4 overflow-x-auto rounded-lg bg-slate-900 p-4 text-[13px] text-slate-100;
+}
+.article-prose pre code {
+  @apply bg-transparent p-0 text-inherit;
+}
+.article-prose img {
+  @apply my-4 max-w-full rounded-lg;
+}
+.article-prose hr {
+  @apply my-8 border-slate-200;
+}
+
+/* Blinking caret while a draft streams. */
+.streaming-caret::after {
+  content: "▍";
+  @apply ml-0.5 animate-pulse text-indigo-500;
 }

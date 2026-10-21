@@ -1,0 +1,60 @@
+// SQLite keeps local setup to zero config. For Vercel/production switch
+// provider to "postgresql", point DATABASE_URL at Neon/Supabase, and run
+// `npx prisma migrate dev --name init` once.
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String    @id @default(cuid())
+  email        String    @unique
+  passwordHash String
+  name         String    @default("")
+  createdAt    DateTime  @default(now())
+  articles     Article[]
+}
+
+/// One article = one run through the five-step flow.
+/// `step` is the step the user should be on next: research | outline | draft | seo | done
+model Article {
+  id              String   @id @default(cuid())
+  userId          String
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Step 1 — brief
+  keyword         String
+  audience        String   @default("")
+  intent          String   @default("informational")
+  length          String   @default("standard")
+
+  step            String   @default("research")
+
+  // Step 2 — research (JSON strings; SQLite has no JSON column)
+  keywordsJson    String   @default("[]")
+  sourcesJson     String   @default("[]")
+  paasJson        String   @default("[]")
+  relatedJson     String   @default("[]")
+  researchContext String   @default("")
+  serpContext     String   @default("")
+  researchNotes   String   @default("")
+
+  // Step 3 — outline
+  outline         String   @default("")
+
+  // Step 4 — draft
+  draft           String   @default("")
+  wordCount       Int      @default(0)
+
+  // Step 5 — SEO package
+  metaJson        String   @default("")
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  @@index([userId, updatedAt])
+}
